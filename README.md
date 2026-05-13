@@ -49,17 +49,6 @@ The application allows users to browse products, manage shopping carts, authenti
 
 ---
 
-## 📸 Screenshots
-
-> Add screenshots of your application here.
-
-Example:
-```md
-![Home Page](./screenshots/home.png)
-```
-
----
-
 ## ⚙️ Installation
 
 Clone the repository:

@@ -26,7 +26,7 @@ export default function CategorySlider() {
       <Swiper
         modules={[Autoplay]}
         spaceBetween={10}
-        slidesPerView={5}
+        slidesPerView={3}
         autoplay={{ delay: 2000 }}
         loop={true}
       >

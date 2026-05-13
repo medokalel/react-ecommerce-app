@@ -25,6 +25,7 @@ main .heroSection .heroInfo .btns button{
   font-size: 18px;
   font-weight: 400;
   background-color: white;
+  margin-bottom: 6px;
 }
 main .heroSection .heroInfo .btns .btn1{
   color: white;

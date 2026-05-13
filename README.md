@@ -90,9 +90,7 @@ npm run dev
 
 ## 🌐 Live Demo
 
-```text
-[Add your live demo link here](https://jolly-crisp-1b2e2d.netlify.app/)
-```
+https://jolly-crisp-1b2e2d.netlify.app/
 
 ---
 

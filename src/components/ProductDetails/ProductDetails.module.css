@@ -1,0 +1,175 @@
+.productDetails {
+  padding: 60px 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftSide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detailsImage {
+  width: 100%;
+  max-width: 450px;
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 24px;
+}
+
+.detailsImage img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: transform 0.4s ease;
+}
+
+.detailsImage:hover img {
+  transform: scale(1.02);
+}
+
+.rightSide {
+  padding: 0 16px;
+}
+
+.rightSide h2 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #101828;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+
+.rateInfo {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rateIcon {
+  color: #fbbf24;
+  font-size: 14px;
+}
+
+.rateIcon i {
+  margin-right: 2px;
+}
+
+.rate {
+  color: #4a5565;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.newPrice {
+  font-size: 36px;
+  margin-right: 12px;
+  font-weight: 800;
+  color: #8b5cf6;
+}
+
+.price {
+  font-size: 20px;
+  color: #99a1af;
+}
+
+.description {
+  padding: 24px 0;
+  color: #4a5565;
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.btn button {
+  border: none;
+  background-color: #8b5cf6;
+  border-radius: 50px;
+  padding: 14px 32px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  width: 100%;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn button:hover {
+  background-color: #7c3aed;
+  transform: translateY(-2px);
+}
+
+.spinner {
+  height: 80vh;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #e5e7eb;
+  border-bottom-color: #8b5cf6;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 991px) {
+  .productDetails {
+    padding: 40px 0;
+  }
+  .rightSide h2 {
+    font-size: 28px;
+  }
+  .newPrice {
+    font-size: 30px;
+  }
+  .description {
+    padding: 16px 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .productDetails {
+    padding: 24px 0;
+  }
+  .rightSide {
+    padding: 0;
+    margin-top: 24px;
+  }
+  .rightSide h2 {
+    font-size: 24px;
+  }
+  .newPrice {
+    font-size: 28px;
+  }
+  .price {
+    font-size: 18px;
+  }
+  .description {
+    font-size: 15px;
+    padding: 16px 0;
+  }
+  .detailsImage {
+    padding: 16px;
+  }
+  .btn button {
+    max-width: 100%;
+  }
+}

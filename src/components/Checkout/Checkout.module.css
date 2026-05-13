@@ -1,0 +1,391 @@
+.checkout {
+  padding: 40px 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
+  min-height: 100vh;
+}
+
+.backLink {
+  margin-bottom: 16px;
+}
+
+.backLink a {
+  color: #4a5565;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s ease;
+}
+
+.backLink a:hover {
+  color: #8b5cf6;
+}
+
+.backLink i {
+  font-size: 12px;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.header h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: #101828;
+  margin-bottom: 4px;
+}
+
+.header p {
+  color: #4a5565;
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+.shippingCard {
+  background-color: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.iconCircle {
+  width: 36px;
+  height: 36px;
+  background-color: #8b5cf6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+}
+
+.cardTitle h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputWrapper i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.inputWrapper input,
+.formGroup input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #374151;
+  background-color: #ffffff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inputWrapper input {
+  padding-left: 40px;
+}
+
+.inputWrapper input:focus,
+.formGroup input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.inputWrapper input::placeholder,
+.formGroup input::placeholder {
+  color: #9ca3af;
+}
+
+.paymentCard {
+  background-color: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.paymentOption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paymentOption:last-child {
+  margin-bottom: 0;
+}
+
+.paymentOption:hover {
+  border-color: #d1d5db;
+}
+
+.paymentOption.active {
+  border-color: #8b5cf6;
+  background-color: #faf5ff;
+}
+
+.radioWrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease;
+}
+
+.paymentOption.active .radio {
+  border-color: #8b5cf6;
+}
+
+.radioInner {
+  width: 10px;
+  height: 10px;
+  background-color: #8b5cf6;
+  border-radius: 50%;
+}
+
+.paymentInfo h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0 0 2px;
+}
+
+.paymentInfo p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.paymentOption > i {
+  color: #9ca3af;
+  font-size: 18px;
+}
+
+.summaryCard {
+  background-color: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 16px;
+  padding: 24px;
+  position: sticky;
+  top: 24px;
+}
+
+.summaryCard h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 20px;
+}
+
+.itemsList {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.item:last-child {
+  margin-bottom: 0;
+}
+
+.item img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.itemInfo h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #101828;
+  margin: 0 0 2px;
+  line-height: 1.3;
+}
+
+.itemInfo p {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0 0 4px;
+}
+
+.itemPrice {
+  font-size: 14px;
+  font-weight: 700;
+  color: #8b5cf6;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.summaryRow span:first-child {
+  color: #4a5565;
+}
+
+.summaryRow span:last-child {
+  color: #101828;
+  font-weight: 600;
+}
+
+.summaryRow .free {
+  color: #00a63e;
+}
+
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid #f3f4f6;
+  margin-bottom: 20px;
+}
+
+.summaryTotal span:first-child {
+  font-size: 16px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.summaryTotal span:last-child {
+  font-size: 24px;
+  font-weight: 800;
+  color: #8b5cf6;
+}
+
+.placeOrderBtn {
+  width: 100%;
+  background-color: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.placeOrderBtn:hover {
+  background-color: #7c3aed;
+  transform: translateY(-2px);
+}
+
+.secureNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.secureNote i {
+  color: #00a63e;
+  font-size: 14px;
+}
+
+.secureNote span {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.secureNote p {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+@media (max-width: 991px) {
+  .header h1 {
+    font-size: 28px;
+  }
+  .summaryCard {
+    position: static;
+  }
+}
+
+@media (max-width: 576px) {
+  .checkout {
+    padding: 24px 0;
+  }
+  .header h1 {
+    font-size: 24px;
+  }
+  .shippingCard,
+  .paymentCard,
+  .summaryCard {
+    padding: 16px;
+  }
+  .cardTitle h3 {
+    font-size: 18px;
+  }
+  .summaryTotal span:last-child {
+    font-size: 20px;
+  }
+}

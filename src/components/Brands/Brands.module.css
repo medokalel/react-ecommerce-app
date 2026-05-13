@@ -1,0 +1,649 @@
+/* ShopByBrand.module.css */
+
+.pageWrapper {
+  background-color: #ffffff;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+.pageTitle {
+  font-size: 32px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 4px;
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 0;
+}
+
+.searchWrapper {
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #adb5bd;
+  font-size: 14px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #495057;
+  background-color: #fff;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.sliderContainer {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
+.sliderTrack {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slide {
+  min-width: 33.333%;
+  padding: 0 6px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.slide img {
+  width: 100%;
+  height: 160px;
+  object-fit: contain;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  display: block;
+  padding: 16px;
+}
+
+.slideOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 6px;
+  right: 6px;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  border-radius: 0 0 12px 12px;
+}
+
+.slideOverlay h3 {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.sliderArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #495057;
+  font-size: 14px;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.sliderArrow:hover {
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.sliderArrowLeft {
+  left: 12px;
+}
+
+.sliderArrowRight {
+  right: 12px;
+}
+
+.sliderDots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dotActive {
+  background-color: #6b7280;
+  width: 18px;
+  border-radius: 3px;
+}
+
+.azFilter {
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 0;
+  margin-top: 24px;
+  background-color: #fff;
+}
+
+.azLetters {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.azLetters::-webkit-scrollbar {
+  display: none;
+}
+
+.azLetter {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background-color: transparent;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.azLetter:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.azLetterActive {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.categoryTabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.categoryTab {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background-color: transparent;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.categoryTab:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.categoryTabActive {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.letterHeading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.brandCard {
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 100%;
+}
+
+.brandCard:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+  border-color: #d1d5db;
+}
+
+.brandImage {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 12px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9fafb;
+}
+
+.brandImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
+
+.brandName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #101828;
+  margin-bottom: 4px;
+}
+
+.spinner {
+  height: 40vh;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #e5e7eb;
+  border-bottom-color: #2563eb;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.newsletter {
+  background-color: #2563eb;
+  padding: 48px 16px;
+  text-align: center;
+}
+
+.newsletterIcon {
+  color: #fff;
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+.newsletter h3 {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.newsletter p {
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.newsletterForm {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.emailInputWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.emailInputWrapper i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.emailInputWrapper input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #495057;
+  background-color: rgba(255,255,255,0.15);
+}
+
+.emailInputWrapper input::placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.emailInputWrapper input:focus {
+  outline: none;
+  background-color: rgba(255,255,255,0.25);
+}
+
+.newsletterForm button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #fff;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.newsletterForm button:hover {
+  background-color: #f3f4f6;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContent {
+  background-color: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modalClose {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255,255,255,0.9);
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.modalClose:hover {
+  background-color: #fff;
+}
+
+.modalBanner {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  background-color: #f8f9fa;
+}
+
+.modalBanner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.modalBody {
+  padding: 20px 24px 24px;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.modalBrandInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.modalBrandLogo {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #e5e7eb;
+  flex-shrink: 0;
+  background-color: #f9fafb;
+}
+
+.modalBrandLogo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+
+.modalBrandInfo h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 4px;
+}
+
+.modalMeta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modalCategory {
+  font-size: 12px;
+  color: #6b7280;
+  background-color: #f3f4f6;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.modalProducts {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.followBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #2563eb;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.followBtn:hover {
+  background-color: #1d4ed8;
+}
+
+.modalDesc {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.modalProductsSection {
+  margin-top: 16px;
+}
+
+.modalSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modalSectionHeader h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0;
+}
+
+.seeAll {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.seeAll:hover {
+  text-decoration: underline;
+}
+
+.modalProductsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.modalProductCard {
+  background-color: #f9fafb;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modalProductCard:hover {
+  background-color: #f3f4f6;
+}
+
+.modalProductCard img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.modalProductName {
+  font-size: 12px;
+  color: #374151;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.modalProductPrice {
+  font-size: 13px;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .slide {
+    min-width: 100%;
+  }
+  .slide img {
+    height: 200px;
+  }
+  .modalProductsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .modalHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .followBtn {
+    width: 100%;
+    justify-content: center;
+  }
+  .pageTitle {
+    font-size: 26px;
+  }
+  .azLetter {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .modalContent {
+    margin: 8px;
+    max-height: 95vh;
+  }
+  .modalBanner {
+    height: 140px;
+  }
+}

@@ -1,0 +1,135 @@
+main .heroSection{
+  background-color: #FBF4FC;
+}
+main .heroSection .heroInfo{
+  max-width: 1300px;
+  padding: 80px 30px;
+  margin: auto;
+}
+main .heroSection .heroInfo h2{
+  font-size: 60px;
+  font-weight: 800;
+}
+main .heroSection .heroInfo h2 span{
+  color: #8B5CF6;
+}
+main .heroSection .heroInfo p{
+  color: #6a7282;
+  font-size: 20px;
+  margin-top: 20px;
+}
+main .heroSection .heroInfo .btns button{
+  padding: 16px 40px;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 400;
+  background-color: white;
+}
+main .heroSection .heroInfo .btns .btn1{
+  color: white;
+  background-color: #8B5CF6;
+  margin-right: 16px;
+  transition: 0.4s;
+}
+main .heroSection .heroInfo .btns .btn1:hover{
+  background-color: #7134ff;
+}
+main .heroSection .heroInfo .btns .btn2{
+  border: 1px solid #d1d5dc;
+  transition: 0.4s;
+}
+main .heroSection .heroInfo .btns .btn2:hover{
+  background-color: #f4f4f4;
+}
+
+
+main .categoryContent{
+  max-width: 1300px;
+  margin: auto;
+  padding: 0px 30px 60px;
+}
+main .categoryContent .categoryHeader{
+  text-align: center;
+  margin-bottom: 48px;
+}
+main .categoryContent .categoryHeader h2{
+  color: #101828;
+  font-size: 36px;
+  font-weight: 700;
+}
+main .categoryContent .categoryHeader span{
+  color: #6a7282;
+  font-size: 18px;
+  font-weight: 500;
+}
+main .categoryContent .categoryCards .card{
+  border-radius: 14px;
+  border: 1px solid #0000001a;
+  padding: 32px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+main .categoryContent .categoryCards .card:hover{
+  box-shadow: 5px 5px 15px -3px #0000001a;
+  transform: translatey(-5px);
+}
+main .categoryContent .categoryCards .card .cardIcon span{
+  border-radius: 50%;
+  display: inline-block;
+  text-align: center;
+  line-height: 64px;
+  font-size: 28px;
+  color: #7c3aed;
+  margin-bottom: 16px;
+  width: 64px;
+  height: 64px;
+  transition: all 0.2s ease;
+}
+main .categoryContent .categoryCards .card .icon1 span{
+  background-color: #f3e8ff;
+}
+main .categoryContent .categoryCards .card .icon2 span{
+  background-color: #fce7f3;
+}
+main .categoryContent .categoryCards .card .icon3 span{
+  background-color: #e0e7ff;
+}
+main .categoryContent .categoryCards .card:hover .cardIcon span{
+  transform: scale(1.1);
+}
+main .categoryContent .categoryCards .card .des h3{
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #101828;
+}
+main .categoryContent .categoryCards .card .des p{
+  color: #717182;
+}
+
+@media (max-width: 768px) {
+  main .heroSection .heroInfo h2 {
+    font-size: 38px;
+  }
+  main .heroSection .heroInfo p {
+    font-size: 15px;
+  }
+  main .heroSection .heroInfo .btns button {
+    padding: 12px 28px;
+    font-size: 15px;
+  }
+  main .categoryContent .categoryHeader h2{
+    font-size: 28px;
+  }
+  main .categoryContent .categoryHeader span{
+    font-size: 15px;
+  }
+  main .categoryContent .categoryCards .card .cardIcon span{
+    font-size: 20px;
+  }
+  main .categoryContent .categoryCards .card .des p{
+    font-size: 15px;
+  }
+}

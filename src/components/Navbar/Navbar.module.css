@@ -10,7 +10,7 @@ header {
 .brand {
   font-size: 24px;
   font-weight: 700;
-  color: #8B5CF6 !important;
+  color: #7c3aed !important;
   text-decoration: none;
   letter-spacing: -0.5px;
 }
@@ -25,11 +25,11 @@ header {
 }
 
 .navLink:hover {
-  color: #8B5CF6;
+  color: #7c3aed;
 }
 
 .navLink.active {
-  color: #8B5CF6;
+  color: #7c3aed;
   font-weight: 600;
 }
 
@@ -67,7 +67,7 @@ header {
 }
 
 .searchInput:focus {
-  border: 2px solid #8B5CF6;
+  border: 2px solid #7c3aed;
 }
 
 .navRight {
@@ -94,7 +94,7 @@ header {
   position: absolute;
   top: -10px;
   right: -10px;
-  background-color: #8B5CF6;
+  background-color: #7c3aed;
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -109,7 +109,7 @@ header {
 .btnAuth {
   border: none;
   border-radius: 20px;
-  background-color: #8B5CF6;
+  background-color: #7c3aed;
   color: white;
   padding: 8px 24px;
   font-size: 14px;

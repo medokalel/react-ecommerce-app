@@ -70,7 +70,7 @@
 }
 
 .cardBody h4 {
-  color: #8b5cf6;
+  color: #7c3aed;
   font-weight: 700;
   font-size: 14px;
   margin-bottom: 4px;
@@ -85,7 +85,7 @@
 }
 
 .newPrice {
-  color: #8b5cf6;
+  color: #7c3aed;
   font-size: 24px;
   font-weight: 700;
 }
@@ -108,7 +108,7 @@
 
 .cardFooter button {
   border: none;
-  background-color: #8b5cf6;
+  background-color: #7c3aed;
   border-radius: 25px;
   padding: 12px 16px;
   color: white;
@@ -131,7 +131,7 @@
   width: 50px;
   height: 50px;
   border: 5px solid #e5e7eb;
-  border-bottom-color: #8b5cf6;
+  border-bottom-color: #7c3aed;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;

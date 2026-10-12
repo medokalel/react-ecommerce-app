@@ -1,40 +1,50 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./Cart.module.css";
 import { cartContext } from "../../Context/cartContext";
 import { Link } from "react-router-dom";
-import Checkout from "../Checkout/Checkout";
+import toast from "react-hot-toast";
+import { getErrorMessage } from "../../utils/auth";
 
 export default function Cart() {
-  let [price, setPrice] = useState({})
-  let [cartId, setCartId] = useState(null);
-  let [product, setProduct] = useState({});
+  let [cart, setCart] = useState(null);
+  let [error, setError] = useState('');
+  let [attempt, setAttempt] = useState(0);
   let { getProductToCart, deleteProductFromCart, updateProductInCart } = useContext(cartContext);
 
   async function deleteProduct(id) {
-    console.log(id);
-    let response = await deleteProductFromCart(id);
-    setProduct(response?.data?.data);
-    setPrice(response?.data?.data);
+    try {
+      const response = await deleteProductFromCart(id);
+      setCart(response.data.data);
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not remove this item.'));
+    }
   }
 
-  async function updateProduct(Id, count) {
-    let response = await updateProductInCart(Id, count);
-    console.log("response", response?.data?.data);
-    setProduct(response?.data?.data);
-    setPrice(response?.data?.data);
-
+  async function updateProduct(id, count) {
+    if (count < 1) return deleteProduct(id);
+    try {
+      const response = await updateProductInCart(id, count);
+      setCart(response.data.data);
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not update the quantity.'));
+    }
   }
 
   useEffect(() => {
-    async function fetchCartProduct() {
-      let { data } = await getProductToCart();
-      console.log('cart', data.data);
-      setCartId(data?.data._id);
-      setProduct(data?.data);
-      setPrice(data?.data);
-    }
-    fetchCartProduct();
-  }, [getProductToCart]);
+    let cancelled = false;
+    getProductToCart()
+      .then(({ data }) => { if (!cancelled) { setCart(data.data); setError(''); } })
+      .catch((err) => {
+        if (cancelled) return;
+        // A new account has no cart yet: the API answers 404, which just means "empty".
+        if (err?.response?.status === 404) { setCart({ products: [], totalCartPrice: 0 }); setError(''); }
+        else setError(getErrorMessage(err, 'Could not load your cart.'));
+      });
+    return () => { cancelled = true; };
+  }, [getProductToCart, attempt]);
+
+  const product = cart;
+  const cartId = cart?._id;
 
   return (
     <>
@@ -64,6 +74,7 @@ export default function Cart() {
                             <button
                               onClick={() => { updateProduct(item?.product?.id, item?.count - 1); }}
                               className={styles.qtyBtn}
+                              aria-label="Decrease quantity"
                             >
                               <i className="fas fa-minus" />
                             </button>
@@ -71,6 +82,7 @@ export default function Cart() {
                             <button
                               onClick={() => { updateProduct(item?.product?.id, item?.count + 1); }}
                               className={styles.qtyBtn}
+                              aria-label="Increase quantity"
                             >
                               <i className="fas fa-plus" />
                             </button>
@@ -83,6 +95,7 @@ export default function Cart() {
                           <button
                             onClick={() => { deleteProduct(item?.product?.id); }}
                             className={styles.removeBtn}
+                            aria-label="Remove item"
                           >
                             <i className="fa-regular fa-trash-can" />
                           </button>
@@ -90,9 +103,19 @@ export default function Cart() {
                       </div>
                     </div>
                   ))
+                ) : error ? (
+                  <div className={styles.emptyCart} role="alert">
+                    <h3>{error}</h3>
+                    <button className="btn btn-dark mt-3" onClick={() => { setError(''); setAttempt((n) => n + 1); }}>Try again</button>
+                  </div>
+                ) : cart === null ? (
+                  <div className={styles.emptyCart} role="status">
+                    <h3>Loading your cart…</h3>
+                  </div>
                 ) : (
                   <div className={styles.emptyCart}>
                     <h3>Your cart is empty 🛒</h3>
+                    <Link to="/products" className="btn btn-dark mt-3">Browse products</Link>
                   </div>
                 )}
               </div>
@@ -108,32 +131,23 @@ export default function Cart() {
                   <h4>Shipping</h4>
                   <span className={styles.free}>Free</span>
                 </div>
-                <div className={styles.state}>
-                  <h4>Tax (8%)</h4>
-                  <span>${(product?.totalCartPrice * 0.08).toFixed(2) || 0}</span>
-                </div>
                 <hr />
                 <div className={styles.total}>
                   <div className="d-flex justify-content-between align-items-center">
                     <h4>Total</h4>
-                    <span>${((product?.totalCartPrice || 0) * 1.08).toFixed(2)}</span>
+                    <span>${product?.totalCartPrice || 0}</span>
                   </div>
-                  <Link to={`/checkout/${cartId}`} state={{price: price}}>
-                    <button>Proceed to Checkout</button>
-                  </Link>
-                </div>
-                <div className={styles.promoCode}>
-                  <p>Have a promo code?</p>
-                  <div className={styles.promoInput}>
-                    <input type="text" placeholder="Enter code" />
-                    <button>Apply</button>
-                  </div>
+                  {cartId && product?.products?.length > 0 ? (
+                    <Link to={`/checkout/${cartId}`}>
+                      <button>Proceed to Checkout</button>
+                    </Link>
+                  ) : null}
                 </div>
                 <div className={styles.secureCheckout}>
                   <div>
                     <i className="fa-solid fa-lock" />
                     <span> Secure Checkout</span>
-                    <p>SSL Encrypted Payment</p>
+                    <p>Paid on a secure hosted checkout page</p>
                   </div>
                 </div>
               </div>

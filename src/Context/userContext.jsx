@@ -1,19 +1,14 @@
-import React, { createContext, useEffect, useState } from 'react'
+import { createContext, useState } from 'react'
 
-export let userContext = createContext()
+export const userContext = createContext()
 
-
-export default function UserContextProvider(props) {
-  let [isLogin,setLogin]=useState(null);
-  useEffect(()=>{
-    if(localStorage.userToken !== null){
-      setLogin(localStorage.userToken)
-    }
-  } ,[])
+export default function UserContextProvider({ children }) {
+  // Lazy initial value: no effect needed, and a missing token is null (it used to become undefined).
+  const [isLogin, setLogin] = useState(() => localStorage.getItem('userToken'))
 
   return (
-    <userContext.Provider value={{isLogin,setLogin}}>
-      {props.children}
+    <userContext.Provider value={{ isLogin, setLogin }}>
+      {children}
     </userContext.Provider>
   )
 }

@@ -15,11 +15,11 @@ export default function Auth() {
             </div>
             <div>
               <h1>Welcome to FashionStore</h1>
-              <p className='lead'>Discover the latest trends in fashion. Join our community and enjoy exclusive deals, early access to new collections, and personalized shopping experiences.</p>
+              <p className='lead'>A demo store built for practice. Create an account to browse products, fill a cart and try the checkout flow. No real orders are placed.</p>
               <ul>
-                <li><span><i className="fa-solid fa-check"></i></span>Free shipping on orders over $50</li>
-                <li><span><i className="fa-solid fa-check"></i></span>30-day easy returns policy</li>
-                <li><span><i className="fa-solid fa-check"></i></span>Exclusive member discounts</li>
+                <li><span><i className="fa-solid fa-check"></i></span>Browse products and brands</li>
+                <li><span><i className="fa-solid fa-check"></i></span>Add items to your cart and manage quantities</li>
+                <li><span><i className="fa-solid fa-check"></i></span>Pay by card through a secure hosted checkout</li>
               </ul>
             </div>
           </div>

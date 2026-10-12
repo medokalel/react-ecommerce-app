@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import * as Yup from 'yup'
 import { userContext } from '../../Context/userContext';
+import { API_BASE, getErrorMessage } from '../../utils/auth';
 
 export default function SignUp() {
 
@@ -14,25 +15,25 @@ export default function SignUp() {
 
   async function handleRegister(formData){ 
 
-    await axios.post('https://ecommerce.routemisr.com/api/v1/auth/signup',formData)
-      .then((response)=>{
-        if(response.data.message =='success'){
-          localStorage.setItem('userToken',response.data.token)
-          setLogin(response.data.token);
-          navigate('/');
-        }
-      })
-      .catch((error)=>{
-        setError(error.response.data.message)
-      })
+    setError('');
+    try {
+      const response = await axios.post(`${API_BASE}/auth/signup`, formData);
+      if (response.data.message === 'success') {
+        localStorage.setItem('userToken', response.data.token);
+        setLogin(response.data.token);
+        navigate('/');
+      }
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
 
   }
   let validation = Yup.object({
     name: Yup.string().required('name is required'),
     email: Yup.string().required('email is required').email('@ is required'),
     phone: Yup.string().required('phone is required').matches(/^01[0125][0-9]{8}$/,'phone is not valid'),
-    password: Yup.string().required('password is required').matches(/^[A-Za-z0-9@#*]{6,12}$/,'password is not valid'),
-    rePassword: Yup.string().required('required').oneOf([Yup.ref('password')]),
+    password: Yup.string().required('password is required').min(6,'password must be at least 6 characters'),
+    rePassword: Yup.string().required('please confirm your password').oneOf([Yup.ref('password')],'passwords do not match'),
   })
 
   let formik = useFormik({
@@ -41,7 +42,7 @@ export default function SignUp() {
       email:'',
       password:'',
       rePassword:'',
-      phone:'01010700702',
+      phone:'',
     },
     validationSchema:validation,
     onSubmit:handleRegister
@@ -83,6 +84,16 @@ export default function SignUp() {
               }
             </div>
             <div className={styles.inputs}>
+              <label htmlFor="phone">Phone Number</label>
+              <span><i className="fa-solid fa-phone"></i></span>
+              <input id='phone' className={`form-control ${formik.touched.phone && formik.errors.phone?'is-invalid':''}`} onChange={formik.handleChange} onBlur={formik.handleBlur} type="tel" name='phone' value={formik.values.phone} placeholder='01xxxxxxxxx' />
+              {
+                formik.touched.phone && formik.errors.phone ?(
+                  <div className={`text-danger ${styles.error}`}>{formik.errors.phone}</div>
+                ):null
+              }
+            </div>
+            <div className={styles.inputs}>
               <label htmlFor="password">Password</label>
               <span><i className="fa-solid fa-lock"></i></span>
               <input id='password' className={`form-control ${formik.touched.password && formik.errors.password?'is-invalid':''}`} onChange={formik.handleChange} onBlur={formik.handleBlur} type="password" name='password' value={formik.values.password} placeholder='Enter your password' />
@@ -103,20 +114,12 @@ export default function SignUp() {
               }
             </div>
             <div>
-              <button type='submit'>Create Account</button>
+              <button type='submit' disabled={formik.isSubmitting}>{formik.isSubmitting ? 'Creating account…' : 'Create Account'}</button>
             </div>
           </form>
         </div>
-        <div className={styles.divider}>
-          <span>Or continue with</span>
-        </div>
-        <div className={styles.otherLogin}>
-          <span><i className="fa-brands fa-google"></i></span>
-          <span><i className="fa-brands fa-facebook"></i></span>
-          <span><i className="fa-brands fa-apple"></i></span>
-        </div>
         <div className={styles.signUp}>
-          <span>Already have an account?<Link to={'..'}> Login</Link></span>
+          <span>Already have an account?<Link to={'/auth/login'}> Login</Link></span>
         </div>
       </div>
     </>

@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { userContext } from '../../Context/userContext';
+import { API_BASE, getErrorMessage } from '../../utils/auth';
 
 export default function Login() {
   let {setLogin} = useContext(userContext);
@@ -13,22 +14,22 @@ export default function Login() {
 
   async function handleLogin(formData){ 
 
-    await axios.post('https://ecommerce.routemisr.com/api/v1/auth/signin',formData)
-      .then((response)=>{
-        if(response.data.message =='success'){
-          localStorage.setItem('userToken',response.data.token);
-          setLogin(response.data.token);
-          navigate('/')
-        }
-      })
-      .catch((error)=>{
-        setError(error.response.data.message)
-      })
+    setError('');
+    try {
+      const response = await axios.post(`${API_BASE}/auth/signin`, formData);
+      if (response.data.message === 'success') {
+        localStorage.setItem('userToken', response.data.token);
+        setLogin(response.data.token);
+        navigate('/');
+      }
+    } catch (error) {
+      setError(getErrorMessage(error));
+    }
 
   }
   let validation = Yup.object({
     email: Yup.string().required('email is required').email('@ is required'),
-    password: Yup.string().required('password is required').matches(/^[A-Za-z0-9@#*]{7,9}$/,'password is not valid'),
+    password: Yup.string().required('password is required'),
   })
 
   let formik = useFormik({
@@ -49,6 +50,7 @@ export default function Login() {
         </div>
         <div className={styles.form}>
           <form action="" onSubmit={formik.handleSubmit}>
+            {ApiError ? <div className="alert alert-danger py-2" role="alert">{ApiError}</div> : null}
             <div className={styles.inputs}>
               <label htmlFor="email">Email Address</label>
               <span><i className="fa-regular fa-envelope"></i></span>
@@ -69,30 +71,13 @@ export default function Login() {
                 ):null
               }
             </div>
-            <div className={styles.rf}>
-              <div className={styles.remember}>
-                <input type="checkbox" name="remember-me" id="remember"/>
-                <label htmlFor="remember">Remember me</label>
-              </div>
-              <div className={styles.forget}>
-                <Link to={''}>Forgot Password?</Link>
-              </div>
-            </div>
             <div>
-              <button type='submit'>Login</button>
+              <button type='submit' disabled={formik.isSubmitting}>{formik.isSubmitting ? 'Signing in…' : 'Login'}</button>
             </div>
           </form>
         </div>
-        <div className={styles.divider}>
-          <span>Or continue with</span>
-        </div>
-        <div className={styles.otherLogin}>
-          <span><i className="fa-brands fa-google"></i></span>
-          <span><i className="fa-brands fa-facebook"></i></span>
-          <span><i className="fa-brands fa-apple"></i></span>
-        </div>
         <div className={styles.signUp}>
-          <span>Don't have an account?<Link to={'signup'}> sign up</Link></span>
+          <span>Don't have an account?<Link to={'/auth/signup'}> sign up</Link></span>
         </div>
       </div>
     </>

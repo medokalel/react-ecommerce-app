@@ -1,91 +1,51 @@
-import React, { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import axios from "axios";
+import { API_BASE, authHeaders, getErrorMessage, getUserId } from "../../utils/auth";
 import styles from "./Allorders.module.css";
 
-const ordersData = [
-  {
-    id: "ORD-2024-004",
-    orderedDate: "Apr 22, 2024",
-    estimatedDate: "Apr 27, 2024",
-    deliveredDate: null,
-    status: "Pending",
-    shippingAddress: "321 Elm St, Manhattan, NY 10002",
-    paymentMethod: "Visa ending in 9999",
-    trackingNumber: "Pending",
-    items: [
-      { name: "Bluetooth Speaker", qty: 1, price: 79.99, image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=100&h=100&fit=crop" }
-    ]
-  },
-  {
-    id: "ORD-2024-003",
-    orderedDate: "Apr 20, 2024",
-    estimatedDate: "Apr 25, 2024",
-    deliveredDate: null,
-    status: "Processing",
-    shippingAddress: "456 Oak Ave, Brooklyn, NY 11201",
-    paymentMethod: "Mastercard ending in 4444",
-    trackingNumber: "TRK-2024-003-XYZ",
-    items: [
-      { name: "Laptop Sleeve", qty: 1, price: 49.99, image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=100&h=100&fit=crop" }
-    ]
-  },
-  {
-    id: "ORD-2024-002",
-    orderedDate: "Apr 18, 2024",
-    estimatedDate: "Apr 23, 2024",
-    deliveredDate: null,
-    status: "Shipped",
-    shippingAddress: "789 Pine Rd, Queens, NY 11375",
-    paymentMethod: "Amex ending in 1234",
-    trackingNumber: "TRK-2024-002-ABC",
-    items: [
-      { name: "Smart Watch", qty: 1, price: 299.99, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop" },
-      { name: "Watch Band", qty: 2, price: 29.99, image: "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=100&h=100&fit=crop" }
-    ]
-  },
-  {
-    id: "ORD-2024-001",
-    orderedDate: "Apr 15, 2024",
-    estimatedDate: null,
-    deliveredDate: "Apr 20, 2024",
-    status: "Delivered",
-    shippingAddress: "123 Maple St, Bronx, NY 10451",
-    paymentMethod: "Visa ending in 8888",
-    trackingNumber: "TRK-2024-001-DEF",
-    items: [
-      { name: "Wireless Headphones", qty: 1, price: 129.99, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100&h=100&fit=crop" }
-    ]
-  },
-  {
-    id: "ORD-2024-005",
-    orderedDate: "Mar 10, 2024",
-    estimatedDate: "Mar 15, 2024",
-    deliveredDate: null,
-    status: "Cancelled",
-    shippingAddress: "555 Cedar Ln, Staten Island, NY 10301",
-    paymentMethod: "PayPal",
-    trackingNumber: "N/A",
-    items: [
-      { name: "Gaming Mouse", qty: 1, price: 89.99, image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=100&h=100&fit=crop" }
-    ]
-  }
-];
+const statusOptions = ["All Statuses", "Pending", "Paid", "Delivered"];
+const sortOptions = ["Newest First", "Oldest First", "Highest Total", "Lowest Total"];
 
 function getStatusClass(status) {
   switch (status) {
-    case "Pending": return styles.statusPending;
-    case "Processing": return styles.statusProcessing;
-    case "Shipped": return styles.statusShipped;
+    case "Paid": return styles.statusProcessing;
     case "Delivered": return styles.statusDelivered;
-    case "Cancelled": return styles.statusCancelled;
     default: return styles.statusPending;
   }
 }
 
-function getOrderTotal(order) {
-  return order.items.reduce((sum, item) => sum + item.price * item.qty, 0).toFixed(2);
+/** Maps an order from the API to what this page renders. */
+function toViewModel(order) {
+  const address = order.shippingAddress || {};
+  return {
+    id: String(order.id ?? order._id),
+    createdAt: order.createdAt,
+    status: order.isDelivered ? "Delivered" : order.isPaid ? "Paid" : "Pending",
+    total: Number(order.totalOrderPrice) || 0,
+    paymentMethod: order.paymentMethodType === "card" ? "Card" : order.paymentMethodType === "cash" ? "Cash" : "–",
+    shippingAddress: [address.details, address.city].filter(Boolean).join(", ") || "–",
+    phone: address.phone || "–",
+    items: (order.cartItems || []).map((item) => ({
+      name: item.product?.title || "Product",
+      qty: item.count,
+      price: Number(item.price) || 0,
+      image: item.product?.imageCover,
+    })),
+  };
+}
+
+function formatDate(iso) {
+  const date = new Date(iso);
+  return Number.isNaN(date.getTime())
+    ? "–"
+    : date.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
 export default function Allorders() {
+  const userId = useMemo(() => getUserId(), []);
+  const [orders, setOrders] = useState(null);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Statuses");
   const [sortBy, setSortBy] = useState("Newest First");
@@ -93,11 +53,25 @@ export default function Allorders() {
   const [showSortDropdown, setShowSortDropdown] = useState(false);
   const [expandedOrder, setExpandedOrder] = useState(null);
 
-  const statusOptions = ["All Statuses", "Pending", "Processing", "Shipped", "Delivered", "Cancelled"];
-  const sortOptions = ["Newest First", "Oldest First", "Highest Total", "Lowest Total"];
+  useEffect(() => {
+    if (!userId) return;
+    let cancelled = false;
+    axios
+      .get(`${API_BASE}/orders/user/${userId}`, { headers: authHeaders() })
+      .then(({ data }) => {
+        if (cancelled) return;
+        const list = Array.isArray(data) ? data : data?.data || [];
+        setOrders(list.map(toViewModel));
+        setError("");
+      })
+      .catch((err) => { if (!cancelled) setError(getErrorMessage(err, "Could not load your orders.")); });
+    return () => { cancelled = true; };
+  }, [attempt, userId]);
+
+  const shownError = error || (userId ? "" : "Please sign in again to see your orders.");
 
   const filteredOrders = useMemo(() => {
-    let result = [...ordersData];
+    let result = [...(orders || [])];
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(o =>
@@ -109,16 +83,16 @@ export default function Allorders() {
       result = result.filter(o => o.status === statusFilter);
     }
     if (sortBy === "Newest First") {
-      result.sort((a, b) => b.id.localeCompare(a.id));
+      result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (sortBy === "Oldest First") {
-      result.sort((a, b) => a.id.localeCompare(b.id));
+      result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     } else if (sortBy === "Highest Total") {
-      result.sort((a, b) => parseFloat(getOrderTotal(b)) - parseFloat(getOrderTotal(a)));
+      result.sort((a, b) => b.total - a.total);
     } else if (sortBy === "Lowest Total") {
-      result.sort((a, b) => parseFloat(getOrderTotal(a)) - parseFloat(getOrderTotal(b)));
+      result.sort((a, b) => a.total - b.total);
     }
     return result;
-  }, [search, statusFilter, sortBy]);
+  }, [orders, search, statusFilter, sortBy]);
 
   function toggleDetails(orderId) {
     setExpandedOrder(expandedOrder === orderId ? null : orderId);
@@ -128,7 +102,7 @@ export default function Allorders() {
     <div className={styles.pageWrapper}>
       <div className="container">
         <h1 className={styles.pageTitle}>My Orders</h1>
-        <p className={styles.totalOrders}>Total orders: {filteredOrders.length}</p>
+        <p className={styles.totalOrders}>Total orders: {orders ? orders.length : 0}</p>
         <div className={styles.filterBar}>
           <div className={styles.searchBox}>
             <i className={`fa-solid fa-magnifying-glass ${styles.searchIcon}`}></i>
@@ -177,6 +151,14 @@ export default function Allorders() {
             )}
           </div>
         </div>
+        {shownError ? (
+          <div className="text-center py-5" role="alert">
+            <p className="text-muted">{shownError}</p>
+            <button className="btn btn-dark" onClick={() => { setError(""); setAttempt((n) => n + 1); }}>Try again</button>
+          </div>
+        ) : orders === null && userId ? (
+          <div className="text-center py-5" role="status"><p className="text-muted">Loading your orders…</p></div>
+        ) : null}
         <div className="row">
           {filteredOrders.map(order => {
             const isExpanded = expandedOrder === order.id;
@@ -185,13 +167,8 @@ export default function Allorders() {
                 <div className={styles.orderCard}>
                   <div className={styles.orderHeader}>
                     <div>
-                      <div className={styles.orderId}>
-                        {order.id}
-                        <i className={`fa-regular fa-copy ${styles.copyIcon}`} title="Copy"></i>
-                      </div>
-                      <div className={styles.orderDate}>Ordered: {order.orderedDate}</div>
-                      {order.estimatedDate && <div className={styles.orderDate}>Estimated: {order.estimatedDate}</div>}
-                      {order.deliveredDate && <div className={styles.orderDate}>Delivered: {order.deliveredDate}</div>}
+                      <div className={styles.orderId}>#{order.id}</div>
+                      <div className={styles.orderDate}>Ordered: {formatDate(order.createdAt)}</div>
                     </div>
                     <span className={`${styles.statusBadge} ${getStatusClass(order.status)}`}>
                       {order.status}
@@ -209,21 +186,12 @@ export default function Allorders() {
                   ))}
                   <div className={styles.orderTotalRow}>
                     <span className={styles.orderTotalLabel}>Order Total</span>
-                    <span className={styles.orderTotalValue}>${getOrderTotal(order)}</span>
+                    <span className={styles.orderTotalValue}>${order.total.toFixed(2)}</span>
                   </div>
                   <div className={styles.actionButtons}>
-                    {order.status !== "Delivered" && order.status !== "Cancelled" && (
-                      <button className={styles.btnTrack}>
-                        <i className="fa-solid fa-truck-fast me-1"></i> Track Order
-                      </button>
-                    )}
                     <button className={styles.btnOutline} onClick={() => toggleDetails(order.id)}>
                       View Details <i className={`fa-solid fa-chevron-${isExpanded ? "up" : "down"} ms-1`} style={{fontSize:10}}></i>
                     </button>
-                    <button className={styles.btnOutline}>Reorder</button>
-                    {order.status === "Pending" && (
-                      <button className={styles.btnCancel}>Cancel</button>
-                    )}
                   </div>
                   {isExpanded && (
                     <div className={styles.detailsSection}>
@@ -242,10 +210,10 @@ export default function Allorders() {
                         </div>
                       </div>
                       <div className={styles.detailItem}>
-                        <i className="fa-solid fa-truck"></i>
+                        <i className="fa-solid fa-phone"></i>
                         <div>
-                          <div className={styles.detailLabel}>Tracking Number</div>
-                          <div className={styles.detailValue}>{order.trackingNumber}</div>
+                          <div className={styles.detailLabel}>Phone</div>
+                          <div className={styles.detailValue}>{order.phone}</div>
                         </div>
                       </div>
                     </div>
@@ -255,13 +223,13 @@ export default function Allorders() {
             );
           })}
         </div>
-        {filteredOrders.length === 0 && (
+        {orders !== null && !shownError && filteredOrders.length === 0 && (
           <div className="text-center py-5">
             <i className="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
-            <p className="text-muted">No orders found.</p>
+            <p className="text-muted">{orders.length === 0 ? "You have no orders yet." : "No orders match your filters."}</p>
           </div>
         )}
-        <p className={styles.footerText}>Displaying {filteredOrders.length} of {filteredOrders.length} orders</p>
+        {orders !== null && <p className={styles.footerText}>Displaying {filteredOrders.length} of {orders.length} orders</p>}
       </div>
     </div>
   );

@@ -1,37 +1,45 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import styles from './ProductDetails.module.css';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { cartContext } from '../../Context/cartContext';
 import toast from 'react-hot-toast';
+import { API_BASE, getErrorMessage } from '../../utils/auth';
+
+// Five icons: full, half or empty, from the average rating.
+function Stars({ value = 0 }) {
+  return (
+    <span>
+      {[1, 2, 3, 4, 5].map((n) => {
+        const icon = value >= n - 0.25 ? 'fa-solid fa-star' : value >= n - 0.75 ? 'fa-solid fa-star-half-stroke' : 'fa-regular fa-star';
+        return <i key={n} className={icon}></i>;
+      })}
+    </span>
+  );
+}
 
 export default function ProductDetails() {
   let { id } = useParams();
   let [details, setDetails] = useState(null);
+  let [error, setError] = useState('');
   let { addProductToCart } = useContext(cartContext);
 
-  async function addProduct(id) {
-    let response = await addProductToCart(id);
-    console.log('re =', response);
-    if (response.data.status == 'success') {
+  async function addProduct(productId) {
+    try {
+      const response = await addProductToCart(productId);
       toast.success(response.data.message);
-    } else {
-      toast.error(response.data.message);
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not add this item to your cart.'));
     }
   }
 
-  async function getProductDetails() {
-    await axios.get(`https://ecommerce.routemisr.com/api/v1/products/${id}`)
-      .then((item) => {
-        setDetails(item.data.data);
-        console.log('API', item.data.data);
-      })
-      .catch((error) => { console.log(error); });
-  }
-
   useEffect(() => {
-    getProductDetails();
-  }, []);
+    let cancelled = false;
+    axios.get(`${API_BASE}/products/${id}`)
+      .then((item) => { if (!cancelled) setDetails(item.data.data); })
+      .catch((err) => { if (!cancelled) setError(getErrorMessage(err, 'Could not load this product.')); });
+    return () => { cancelled = true; };
+  }, [id]);
 
   return (
     <section className={styles.productDetails}>
@@ -50,112 +58,11 @@ export default function ProductDetails() {
                 <div className={styles.rightSide}>
                   <h2>{details.title}</h2>
                   <div className={styles.rateInfo}>
-                    <span className={styles.rateIcon}>
-                      {details.ratingsAverage == 5 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          </span>
-                      ) 
-                      : details.ratingsAverage < 5 && details.ratingsAverage > 4 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star-half-stroke"></i>
-                        </span>
-                      ) 
-                      : details.ratingsAverage == 4 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      ) 
-                      : details.ratingsAverage < 4 && details.ratingsAverage > 3 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star-half-stroke"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      ) 
-                      : details.ratingsAverage == 3 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      )
-                      : details.ratingsAverage < 3 && details.ratingsAverage > 2 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star-half-stroke"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      ) 
-                      : details.ratingsAverage == 2 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      )
-                      : details.ratingsAverage < 2 && details.ratingsAverage > 1 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i className="fa-solid fa-star-half-stroke"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      ) 
-                      : details.ratingsAverage == 1 ? (
-                        <span>
-                          <i className="fa-solid fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      )
-                      : details.ratingsAverage < 1 && details.ratingsAverage > 0 ? (
-                        <span>
-                          <i className="fa-solid fa-star-half-stroke"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                          <i class="fa-regular fa-star"></i>
-                        </span>
-                      ) 
-                      : (
-                        <span>
-                          <i className="fa-regular fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
-                          <i className="fa-regular fa-star"></i>
-                        </span>
-                      )}
-                    </span>
+                    <span className={styles.rateIcon} aria-hidden="true"><Stars value={details.ratingsAverage} /></span>
                     <span className={styles.rate}>{details.ratingsAverage}</span>
                   </div>
                   <div>
                     <span className={styles.newPrice}>${details.price}</span>
-                    <span className={styles.price}><s>{`$${((details.price)*0.38).toFixed(0)}`}</s></span>
                   </div>
                   <p className={styles.description}>
                     {details.description}
@@ -166,6 +73,11 @@ export default function ProductDetails() {
                 </div>
               </div>
             </>
+          ) : error ? (
+            <div className="text-center py-5 w-100" role="alert">
+              <p className="text-muted">{error}</p>
+              <Link to="/products" className="btn btn-dark">Back to products</Link>
+            </div>
           ) : (
             <div className={`${styles.spinner} d-flex justify-content-center align-items-center w-100`}>
               <span className={styles.loader}></span>

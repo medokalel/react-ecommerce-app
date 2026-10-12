@@ -9,12 +9,12 @@ import CategorySlider from '../CategorySlider/CategorySlider';
 export default function Home() {
   return (
     <>
-    <main>
+    <div>
       <section className={styles.heroSection}>
         <div className={`${styles.heroInfo} container`}>
           <div className="row">
             <div className="col-lg-6">
-              <h2>Summer Sale <br /> <span>Up to 70% Off</span></h2>
+              <h2>New Season <br /> <span>Collection</span></h2>
               <p>Discover the latest trends in fashion. Exclusive deals on clothing, shoes, and accessories.</p>
               <div className={styles.btns}>
                 <Link to={'/products'}>
@@ -78,7 +78,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
     </>
   )
 }

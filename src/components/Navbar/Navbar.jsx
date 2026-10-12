@@ -1,12 +1,20 @@
-import React, { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styles from './Navbar.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { userContext } from '../../Context/userContext';
 import { cartContext } from '../../Context/cartContext';
 
 export default function MyNavbar() {
   let { isLogin, setLogin } = useContext(userContext);
   let { cartNumber } = useContext(cartContext);
+  let navigate = useNavigate();
+  let [term, setTerm] = useState('');
+
+  function handleSearch(e) {
+    e.preventDefault();
+    const q = term.trim();
+    navigate(q ? `/products?q=${encodeURIComponent(q)}` : '/products');
+  }
 
   function LogOut() {
     localStorage.removeItem('userToken');
@@ -17,15 +25,15 @@ export default function MyNavbar() {
     <header>
       <nav className={`navbar navbar-expand-lg ${styles.navbar}`}>
         <div className="container">
-          <Link to={''} className={`navbar-brand ${styles.brand}`}>FashionStore</Link>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <Link to={'/'} className={`navbar-brand ${styles.brand}`}>FashionStore</Link>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             {isLogin ? (
               <ul className="navbar-nav">
                 <li className="nav-item">
-                  <NavLink className={`nav-link ${styles.navLink}`} to={''}>Home</NavLink>
+                  <NavLink className={`nav-link ${styles.navLink}`} to={'/'} end>Home</NavLink>
                 </li>
                 <li className="nav-item">
                   <NavLink className={`nav-link ${styles.navLink}`} to={'products'}>Products</NavLink>
@@ -33,14 +41,27 @@ export default function MyNavbar() {
                 <li className="nav-item">
                   <NavLink className={`nav-link ${styles.navLink}`} to={'brands'}>Brands</NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className={`nav-link ${styles.navLink}`} to={'allorders'}>My Orders</NavLink>
+                </li>
               </ul>
             ) : null}
-            <div className={`mx-auto ${styles.inputGroup}`}>
-              <span className={styles.searchIcon}>
-                <i className="fa-solid fa-magnifying-glass"></i>
-              </span>
-              <input className={styles.searchInput} type="search" placeholder="Search products..." name="search" />
-            </div>
+            {isLogin ? (
+              <form className={`mx-auto ${styles.inputGroup}`} role="search" onSubmit={handleSearch}>
+                <span className={styles.searchIcon}>
+                  <i className="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input
+                  className={styles.searchInput}
+                  type="search"
+                  placeholder="Search products..."
+                  name="search"
+                  aria-label="Search products"
+                  value={term}
+                  onChange={(e) => setTerm(e.target.value)}
+                />
+              </form>
+            ) : <div className="mx-auto"></div>}
             <div className={`d-flex align-items-center gap-3 ${styles.navRight}`}>
               {!isLogin ? (
                 <div className='d-flex gap-2'>
@@ -60,12 +81,12 @@ export default function MyNavbar() {
               ) : (
                 <>
                   <span className={styles.cartWrapper}>
-                    <Link to={'/cart'}>
+                    <Link to={'/cart'} aria-label={`Cart, ${cartNumber} items`}>
                       <span className={styles.cartBadge}>{cartNumber}</span>
                       <i className="fa-solid fa-cart-shopping"></i>
                     </Link>
                   </span>
-                  <Link onClick={() => { LogOut(); }} to={'auth'}>
+                  <Link onClick={() => { LogOut(); }} to={'/auth'}>
                     <button className={styles.btnAuth}>
                       <span><i className="fa-solid fa-arrow-right-from-bracket"></i></span>
                       Log Out

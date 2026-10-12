@@ -1,58 +1,73 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import styles from './Products.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { cartContext } from '../../Context/cartContext';
 import toast from 'react-hot-toast';
 import ScrollToTop from '../ScrollToTop/ScrollToTop'
+import { API_BASE, getErrorMessage } from '../../utils/auth';
 
 export default function Products() {
   let [product, setProduct] = useState([]);
+  let [loading, setLoading] = useState(true);
+  let [error, setError] = useState('');
+  let [attempt, setAttempt] = useState(0);
   let { addProductToCart } = useContext(cartContext);
+  let [searchParams] = useSearchParams();
+  const query = (searchParams.get('q') || '').trim().toLowerCase();
 
   async function addProduct(id) {
-    let response = await addProductToCart(id);
-    console.log('re =', response);
-    if (response.data.status == 'success') {
+    try {
+      const response = await addProductToCart(id);
       toast.success(response.data.message);
-    } else {
-      toast.error(response.data.message);
+    } catch (err) {
+      toast.error(getErrorMessage(err, 'Could not add this item to your cart.'));
     }
   }
 
-  async function getData() {
-    await axios.get('https://ecommerce.routemisr.com/api/v1/products')
+  useEffect(() => {
+    let cancelled = false;
+    axios.get(`${API_BASE}/products`)
       .then((response) => {
+        if (cancelled) return;
         setProduct(response.data.data);
-        console.log(response.data.data);
+        setError('');
+        setLoading(false);
       })
-      .catch((error) => { console.log('error', error); });
+      .catch((err) => {
+        if (cancelled) return;
+        setError(getErrorMessage(err, 'Could not load products.'));
+        setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [attempt]);
+
+  function retry() {
+    setLoading(true);
+    setAttempt((n) => n + 1);
   }
 
-  useEffect(() => {
-    getData();
-  }, []);
+  const visible = query
+    ? product.filter((item) => item.title.toLowerCase().includes(query) || item.category?.name?.toLowerCase().includes(query))
+    : product;
 
   return (
   <>
-    <main>
+    <div>
       <section className={styles.productSection}>
         <div className="container">
           <div className={styles.productContent}>
             <div className={styles.productHeader}>
               <h2>All Products</h2>
-              <span>Showing 40 of 40 products</span>
+              <span>{loading || error ? '' : query ? `${visible.length} result${visible.length === 1 ? '' : 's'} for "${searchParams.get('q')}"` : `Showing ${visible.length} products`}</span>
             </div>
             <div className={styles.productBody}>
               <div className="row g-4">
-                {product.length > 0 ? product.map((item) => (
+                {!loading && !error && visible.length > 0 ? visible.map((item) => (
                   <div className="col-lg-3 col-md-4 col-sm-6" key={item.id}>
                     <div className={styles.card}>
                       <div>
                         <Link className="text-decoration-none" to={`/productdetails/${item.id}`}>
-                          <div className={styles.des}>
-                            <span>-38%</span>
-                          </div>
                           <div className={styles.cardImage}>
                             <img src={item.imageCover} alt={item.title} />
                           </div>
@@ -62,7 +77,6 @@ export default function Products() {
                             <div className="d-flex justify-content-between align-items-center">
                               <div>
                                 <span className={styles.newPrice}>{`$${item.price}`}</span>
-                                <span className={styles.price}><s>{`$${((item.price)*0.38).toFixed(0)}`}</s></span>
                               </div>
                               <div>
                                 {item.ratingsAverage > 2.5 ? (
@@ -83,9 +97,18 @@ export default function Products() {
                       </div>
                     </div>
                   </div>
-                )) : (
+                )) : loading ? (
                   <div className={`${styles.spinner} d-flex justify-content-center align-items-center w-100`}>
                     <span className={styles.loader}></span>
+                  </div>
+                ) : error ? (
+                  <div className="text-center py-5 w-100" role="alert">
+                    <p className="text-muted">{error}</p>
+                    <button className="btn btn-dark" onClick={retry}>Try again</button>
+                  </div>
+                ) : (
+                  <div className="text-center py-5 w-100">
+                    <p className="text-muted">No products match your search.</p>
                   </div>
                 )}
               </div>
@@ -93,7 +116,7 @@ export default function Products() {
           </div>
         </div>
       </section>
-    </main>    
+    </div>
     <ScrollToTop />
   </>
   );

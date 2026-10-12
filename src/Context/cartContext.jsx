@@ -1,60 +1,61 @@
-import axios from 'axios';
-import React, { createContext, useEffect, useState } from 'react'
+import axios from 'axios'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { userContext } from './userContext'
+import { API_BASE, authHeaders } from '../utils/auth'
 
+export const cartContext = createContext()
 
-let header ={ token: localStorage.getItem('userToken')}
-export let cartContext = createContext();
+// Every request rejects on failure so each screen can show its own error.
+// The token is read when the request is sent (authHeaders), not when this file loads.
+export default function CartContextProvider({ children }) {
+  const { isLogin } = useContext(userContext)
+  const [cartNumber, setCartNumber] = useState(0)
 
-export default function CartContextProvider(props) {
+  const addProductToCart = useCallback(async (id) => {
+    const response = await axios.post(`${API_BASE}/cart`, { productId: id }, { headers: authHeaders() })
+    setCartNumber(response.data.numOfCartItems)
+    return response
+  }, [])
 
-  let [cartNumber , setCartNumber] = useState(0);
-  
-  function addProductToCart(id){
-    return axios.post(
-      `https://ecommerce.routemisr.com/api/v1/cart`,
-      { productId: id },
-      { headers: header }
-    ).then((response)=>{
-        console.log('response' , response)
-        setCartNumber(response.data.numOfCartItems)
-        return response}
-      )
-      .catch((error)=>error)
-  }
-  function getProductToCart(){
-    return axios.get(
-      `https://ecommerce.routemisr.com/api/v1/cart`,
-      { headers: header }
-    ).then((response)=>{
-        setCartNumber(response.data.numOfCartItems)
-        return response}
-      )
-      .catch((error)=>error)
-  }
-  function deleteProductFromCart(productId){
-    return axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
-    { headers: header }
-    ).then((response)=>{
-        setCartNumber(response.data.numOfCartItems)
-        return response}
-      )
-      .catch((error)=>error)
-  }
-  function updateProductInCart(Id,count){
-    return axios.put(`https://ecommerce.routemisr.com/api/v1/cart/${Id}`, 
-    { count: count },
-    { headers: header },
-    );
-  }
+  const getProductToCart = useCallback(async () => {
+    const response = await axios.get(`${API_BASE}/cart`, { headers: authHeaders() })
+    setCartNumber(response.data.numOfCartItems)
+    return response
+  }, [])
 
+  const deleteProductFromCart = useCallback(async (productId) => {
+    const response = await axios.delete(`${API_BASE}/cart/${productId}`, { headers: authHeaders() })
+    setCartNumber(response.data.numOfCartItems)
+    return response
+  }, [])
+
+  const updateProductInCart = useCallback(async (productId, count) => {
+    const response = await axios.put(`${API_BASE}/cart/${productId}`, { count }, { headers: authHeaders() })
+    setCartNumber(response.data.numOfCartItems)
+    return response
+  }, [])
+
+  // Load the badge count after login (and on first load when already logged in); reset it on logout.
   useEffect(() => {
-    if (localStorage.getItem('userToken')) {
-      getProductToCart();
-    }
-  }, []);
-  
-  
-  return <cartContext.Provider value={{addProductToCart, getProductToCart, deleteProductFromCart, updateProductInCart, cartNumber}}>
-    {props.children}
-  </cartContext.Provider>
+    if (!isLogin) return
+    let cancelled = false
+    axios
+      .get(`${API_BASE}/cart`, { headers: authHeaders() })
+      .then((response) => { if (!cancelled) setCartNumber(response.data.numOfCartItems) })
+      .catch(() => { /* the badge simply stays at its last value */ })
+    return () => { cancelled = true }
+  }, [isLogin])
+
+  const value = useMemo(
+    () => ({
+      addProductToCart,
+      getProductToCart,
+      deleteProductFromCart,
+      updateProductInCart,
+      cartNumber: isLogin ? cartNumber : 0,
+    }),
+    [addProductToCart, getProductToCart, deleteProductFromCart, updateProductInCart, cartNumber, isLogin],
+  )
+
+  return <cartContext.Provider value={value}>{children}</cartContext.Provider>
 }

@@ -1,49 +1,59 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import styles from "./Brands.module.css";
 import BrandSlider from '../BrandSlider/BrandSlider'
+import { API_BASE, getErrorMessage } from "../../utils/auth";
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const categories = ["All Brands", "Fashion", "Electronics", "Beauty", "Home", "Sports", "Kids"];
-
-const topProducts = [
-  { name: "Headphones Pro", price: 199.99, image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=150&h=150&fit=crop" },
-  { name: "Wireless Buds", price: 149.99, image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=150&h=150&fit=crop" },
-  { name: "Noise Cancel", price: 299.99, image: "https://images.unsplash.com/photo-1484704849700-f032a568e944?w=150&h=150&fit=crop" },
-  { name: "Studio Max", price: 349.99, image: "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=150&h=150&fit=crop" },
-];
 
 export default function Brands() {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All Brands");
   const [activeLetter, setActiveLetter] = useState("A");
   const [selectedBrand, setSelectedBrand] = useState(null);
 
-  async function getBrands() {
-    setLoading(true);
-    try {
-      let allBrands = [];
-      let page = 1;
-      let hasMore = true;
-      while (hasMore) {
-        const response = await axios.get(`https://ecommerce.routemisr.com/api/v1/brands?page=${page}`);
-        allBrands = [...allBrands, ...response.data.data];
-        hasMore = response.data.metadata.currentPage < response.data.metadata.numberOfPages;
-        page++;
-      }
-      setBrands(allBrands);
-    } catch (error) {
-      console.log("error", error);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
 
+  // Brands come in pages: keep asking until the last page.
   useEffect(() => {
+    let cancelled = false;
+    async function getBrands() {
+      try {
+        let allBrands = [];
+        let page = 1;
+        let hasMore = true;
+        while (hasMore) {
+          const response = await axios.get(`${API_BASE}/brands?page=${page}`);
+          allBrands = [...allBrands, ...response.data.data];
+          hasMore = response.data.metadata.currentPage < response.data.metadata.numberOfPages;
+          page++;
+        }
+        if (!cancelled) { setBrands(allBrands); setError(""); }
+      } catch (err) {
+        if (!cancelled) setError(getErrorMessage(err, "Could not load brands."));
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
     getBrands();
-  }, []);
+    return () => { cancelled = true; };
+  }, [attempt]);
+
+  // Lock page scroll while the brand dialog is open.
+  useEffect(() => {
+    if (!selectedBrand) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previous; };
+  }, [selectedBrand]);
+
+  function retry() {
+    setLoading(true);
+    setAttempt((n) => n + 1);
+  }
 
   const filteredBrands = brands.filter(b => {
     const matchSearch = b.name.toLowerCase().includes(search.toLowerCase());
@@ -61,12 +71,10 @@ export default function Brands() {
 
   function openModal(brand) {
     setSelectedBrand(brand);
-    document.body.style.overflow = "hidden";
   }
 
   function closeModal() {
     setSelectedBrand(null);
-    document.body.style.overflow = "auto";
   }
 
   return (
@@ -87,7 +95,12 @@ export default function Brands() {
           />
         </div>
       </div>
-      {loading ? (
+      {error ? (
+        <div className="text-center py-5" role="alert">
+          <p className="text-muted">{error}</p>
+          <button className="btn btn-dark" onClick={retry}>Try again</button>
+        </div>
+      ) : loading ? (
         <div className={`${styles.spinner} d-flex justify-content-center align-items-center`} style={{height:"40vh"}}>
           <span className={styles.loader}></span>
         </div>
@@ -108,19 +121,6 @@ export default function Brands() {
                   </button>
                 ))}
               </div>
-            </div>
-          </div>
-          <div className="container mt-4">
-            <div className={styles.categoryTabs}>
-              {categories.map(cat => (
-                <button
-                  key={cat}
-                  className={`${styles.categoryTab} ${cat === activeCategory ? styles.categoryTabActive : ""}`}
-                  onClick={() => setActiveCategory(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
             </div>
           </div>
           <div className="container mt-4 pb-5">
@@ -144,20 +144,6 @@ export default function Brands() {
           </div>
         </>
       )}
-      <div className={styles.newsletter}>
-        <div className="text-center">
-          <i className={`fa-solid fa-arrow-trend-up ${styles.newsletterIcon}`}></i>
-          <h3>New Brands Added Weekly</h3>
-          <p>Subscribe to get notified about the latest brand partnerships</p>
-          <form className={styles.newsletterForm}>
-            <div className={styles.emailInputWrapper}>
-              <i className="fa-regular fa-envelope"></i>
-              <input type="email" placeholder="Enter your email" required/>
-            </div>
-            <button type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
       {selectedBrand && (
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
@@ -175,32 +161,11 @@ export default function Brands() {
                   </div>
                   <div>
                     <h2>{selectedBrand.name}</h2>
-                    <div className={styles.modalMeta}>
-                      <span className={styles.modalCategory}>Electronics</span>
-                      <span className={styles.modalProducts}>120 Products</span>
-                    </div>
                   </div>
                 </div>
-                <button className={styles.followBtn}>
-                  <i className="fa-regular fa-bell"></i> Follow Brand
-                </button>
               </div>
-              <p className={styles.modalDesc}>Discover amazing products from {selectedBrand.name}</p>
-              <div className={styles.modalProductsSection}>
-                <div className={styles.modalSectionHeader}>
-                  <h4>Top Products</h4>
-                  <a href="#" className={styles.seeAll}>See All</a>
-                </div>
-                <div className={styles.modalProductsGrid}>
-                  {topProducts.map((product, idx) => (
-                    <div key={idx} className={styles.modalProductCard}>
-                      <img src={product.image} alt={product.name} />
-                      <span className={styles.modalProductName}>{product.name}</span>
-                      <span className={styles.modalProductPrice}>${product.price}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <p className={styles.modalDesc}>{selectedBrand.name}</p>
+              <Link to="/products" className="btn btn-dark mt-3" onClick={closeModal}>Browse products</Link>
             </div>
           </div>
         </div>

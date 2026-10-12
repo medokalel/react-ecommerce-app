@@ -15,7 +15,7 @@
 
 .totalOrders {
   font-size: 14px;
-  color: #6c757d;
+  color: #565e64;
   margin-bottom: 20px;
 }
 
@@ -138,7 +138,7 @@
 
 .orderDate {
   font-size: 12px;
-  color: #6c757d;
+  color: #565e64;
   margin-top: 2px;
 }
 
@@ -203,7 +203,7 @@
 
 .productQty {
   font-size: 12px;
-  color: #6c757d;
+  color: #565e64;
 }
 
 .productPrice {
@@ -221,7 +221,7 @@
 }
 
 .orderTotalLabel {
-  color: #6c757d;
+  color: #565e64;
 }
 
 .orderTotalValue {
@@ -324,7 +324,7 @@
 }
 
 .detailLabel {
-  color: #6c757d;
+  color: #565e64;
   font-size: 12px;
   margin-bottom: 1px;
 }
@@ -338,7 +338,7 @@
 .footerText {
   text-align: center;
   font-size: 13px;
-  color: #6c757d;
+  color: #565e64;
   margin-top: 24px;
   padding-bottom: 16px;
 }

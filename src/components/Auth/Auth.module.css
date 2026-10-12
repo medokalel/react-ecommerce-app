@@ -69,7 +69,7 @@
   margin-bottom: 32px;
 }
 .loginContent .rightSide .rightSideHeader h2{
-  color: #8b5cf6;
+  color: #7c3aed;
   font-size: 36px;
   font-weight: 700;
 }
@@ -124,7 +124,7 @@
 }
 .loginContent .rightSide form .rf .forget a{
   text-decoration: none;
-  color: #8b5cf6;
+  color: #7c3aed;
   font-weight: 600;
   font-size: 14px;
 }
@@ -136,7 +136,7 @@
   color: white;
   font-size: 18px;
   font-weight: 600;
-  background-color: #8b5cf6;
+  background-color: #7c3aed;
   transition: all 0.4s ease-out;
 }
 .loginContent .rightSide button:hover{
@@ -172,7 +172,7 @@
   transition: all 0.4s ease;
 }
 .loginContent .rightSide .otherLogin span:hover{
-  border: 2px solid #8b5cf6;
+  border: 2px solid #7c3aed;
   transform: translateY(-3px);
 }
 .loginContent .rightSide .signUp span{
@@ -180,7 +180,7 @@
 }
 .loginContent .rightSide .signUp span a{
   text-decoration: none;
-  color: #8b5cf6;
+  color: #7c3aed;
   font-weight: 600;
 }
 

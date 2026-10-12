@@ -72,7 +72,7 @@
   font-size: 36px;
   margin-right: 12px;
   font-weight: 800;
-  color: #8b5cf6;
+  color: #7c3aed;
 }
 
 .price {
@@ -90,7 +90,7 @@
 
 .btn button {
   border: none;
-  background-color: #8b5cf6;
+  background-color: #7c3aed;
   border-radius: 50px;
   padding: 14px 32px;
   color: white;
@@ -114,7 +114,7 @@
   width: 50px;
   height: 50px;
   border: 5px solid #e5e7eb;
-  border-bottom-color: #8b5cf6;
+  border-bottom-color: #7c3aed;
   border-radius: 50%;
   display: inline-block;
   box-sizing: border-box;

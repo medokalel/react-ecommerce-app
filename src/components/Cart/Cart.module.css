@@ -55,7 +55,7 @@
 .productPrice {
   font-size: 20px;
   font-weight: 800;
-  color: #8b5cf6;
+  color: #7c3aed;
 }
 
 .quantityControl {
@@ -156,7 +156,7 @@
 }
 
 .state .free {
-  color: #00a63e;
+  color: #047857;
 }
 
 .total {
@@ -173,14 +173,14 @@
 .total span {
   font-size: 30px;
   font-weight: 800;
-  color: #8b5cf6;
+  color: #7c3aed;
 }
 
 .total button {
   width: 100%;
   color: white;
   padding: 16px 0;
-  background-color: #8b5cf6;
+  background-color: #7c3aed;
   font-size: 16px;
   font-weight: 600;
   border: none;
@@ -227,18 +227,18 @@
 }
 
 .promoInput input:focus {
-  border-color: #8b5cf6;
+  border-color: #7c3aed;
 }
 
 .promoInput input::placeholder {
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .promoInput button {
   padding: 10px 24px;
-  border: 2px solid #8b5cf6;
+  border: 2px solid #7c3aed;
   background-color: white;
-  color: #8b5cf6;
+  color: #7c3aed;
   border-radius: 50px;
   font-size: 14px;
   font-weight: 600;
@@ -247,7 +247,7 @@
 }
 
 .promoInput button:hover {
-  background-color: #8b5cf6;
+  background-color: #7c3aed;
   color: white;
 }
 
@@ -274,7 +274,7 @@
 .secureCheckout p {
   margin: 0;
   font-size: 12px;
-  color: #9ca3af;
+  color: #6b7280;
 }
 
 .emptyCart {

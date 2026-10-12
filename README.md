@@ -1,123 +1,59 @@
-# 🛒 React E-Commerce App
+# FashionStore: React E-Commerce demo
 
-A modern and responsive E-Commerce web application built with React.js and vite.  
-The application allows users to browse products, manage shopping carts, authenticate accounts, and complete secure checkout processes with a clean and user-friendly interface.
+A small online-store front end built with React and Vite while training at DEPI. Visitors can create an account, browse products and brands, search, fill a cart, and go through a checkout that hands payment to a hosted card page.
 
----
+**Live demo:** https://react-ecommerce-app-sigma.vercel.app/
 
-## 🚀 Features
+> This is a practice project. Products, accounts and orders come from the public [Route e-commerce practice API](https://ecommerce.routemisr.com), shared with other learners, and no real orders are placed.
 
-- 🔐 User Authentication with JWT
-- 🛍️ Product Listing & Product Details
-- 🔎 Product Filtering & Search
-- 🛒 Shopping Cart Management
-  - Add products
-  - Update quantity
-  - Remove items
-- 💳 Stripe Payment Integration
-- ⚡ Fast API Data Fetching with React Query
-- ✅ Form Validation using Formik & Yup
-- 📱 Fully Responsive Design
-- 🚦 Protected Routes
-- 🔄 Dynamic UI Updates
+## Features
 
----
+- Sign up and log in (JWT stored in `localStorage`), with form validation using Formik and Yup
+- Protected routes: cart, orders, brands and checkout redirect to the login page when signed out, including right after logging out
+- Product list with search from the navbar, and a product details page
+- Shopping cart: add items, change quantities, remove items, with a live item count in the navbar
+- Checkout form with validation; payment continues on a hosted card page, then returns to "My Orders"
+- Orders page showing the signed-in user's real orders (status, items, address) with search, filter and sort
+- Brands page that loads every page of brands, with letter filter, search and a details dialog
+- Loading and error states with a Try again button on every screen that calls the API
+- Routes load on demand (code splitting) and the layout is responsive
 
-## 🛠️ Technologies Used
+## Built with
 
-### Frontend
-- React.js
-- JavaScript (ES6+)
-- HTML5
-- CSS3
-- Bootstrap
+React 19, Vite, React Router, Axios, Formik and Yup, Bootstrap 5, React Hot Toast and Swiper. State is shared through the React Context API.
 
-### State Management & Routing
-- React Context API
-- React Router
-- React Query (TanStack Query)
+## Project structure
 
-### APIs & Forms
-- Axios
-- REST APIs
-- Formik
-- Yup
-
-### Other Tools
-- Git & GitHub
-- VS Code
-
----
-
-## ⚙️ Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-username/react-ecommerce-app.git
+```
+src/
+  components/   one folder per screen (component + CSS module)
+  Context/      userContext (login state) and cartContext (cart API + badge count)
+  utils/auth.js token, user id and error-message helpers used by every API call
 ```
 
-Navigate to the project folder:
+## Run locally
 
 ```bash
+git clone https://github.com/medokalel/react-ecommerce-app.git
 cd react-ecommerce-app
-```
-
-Install dependencies:
-
-```bash
 npm install
-```
-
-Run the development server:
-
-```bash
 npm run dev
 ```
 
----
+Other scripts: `npm run build`, `npm run preview`, `npm run lint`.
 
-## 🌐 Live Demo
+No environment variables are needed: the API is public and has no key.
 
-https://jolly-crisp-1b2e2d.netlify.app/
+## Deploy
 
----
+The repository includes a `vercel.json` rewrite so deep links such as `/cart` and the payment return page `/allorders` work on Vercel. On Netlify, `public/_redirects` does the same job.
 
-## 📂 Project Structure
+## Things I would improve next
 
-```bash
-src/
-│
-├── components/
-├── pages/
-├── context/
-├── routes/
-├── services/
-├── assets/
-└── App.jsx
-```
+- Product pagination and category filters (the API supports both)
+- Tests for the cart and checkout logic
+- TypeScript, which I started using after this project
 
----
+## Author
 
-## 🎯 What I Learned
-
-Through this project, I improved my skills in:
-
-- Component-based architecture
-- State management
-- API integration
-- Authentication & protected routes
-- Performance optimization
-- Responsive web design
-- Clean code practices
-
----
-
-## 👨‍💻 Author
-
-### Mohamed Khalel
-
-- GitHub: https://github.com/medokalel
-- LinkedIn: https://www.linkedin.com/in/mohamed-khalel1/
-
----
+Mohamed Khalil · [GitHub](https://github.com/medokalel) · [LinkedIn](https://www.linkedin.com/in/mohamed-khalel1/)

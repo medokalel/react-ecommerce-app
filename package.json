@@ -1,7 +1,7 @@
 {
-  "name": "template",
+  "name": "react-ecommerce-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -15,9 +15,7 @@
     "bootstrap": "^5.3.8",
     "classnames": "^2.5.1",
     "formik": "^2.4.9",
-    "generate-react-cli": "^11.0.4",
     "react": "^19.2.4",
-    "react-bootstrap": "^2.10.10",
     "react-dom": "^19.2.4",
     "react-hot-toast": "^2.6.0",
     "react-router-dom": "^7.14.0",

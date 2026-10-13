@@ -56,4 +56,4 @@ The repository includes a `vercel.json` rewrite so deep links such as `/cart` an
 
 ## Author
 
-Mohamed Khalil · [GitHub](https://github.com/medokalel) · [LinkedIn](https://www.linkedin.com/in/mohamed-khalel1/)
+Mohamed Khalil · [GitHub](https://github.com/medokalel) · [LinkedIn](https://www.linkedin.com/in/mohamed-khalil1/)
